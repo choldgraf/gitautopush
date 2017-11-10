@@ -1,0 +1,12 @@
+
+[build-system]
+requires = ["flit"]
+build-backend = "flit.buildapi"
+
+[tool.flit.metadata]
+module = "gitautopush"
+author = "John Lee and Chris Holdgraf"
+author-email = "choldgraf@gmail.com"
+home-page = "https://predictablynoisy.com/gitautopush"
+classifiers = ["License :: OSI Approved :: MIT License"]
+
