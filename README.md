@@ -36,6 +36,15 @@ The following will happen:
    remote repository.
 4. This cycle repeats.
 
+## Converting with `nbconvert`
+
+In addition, you can tell `gitautopush` to run `nbconvert` on your file
+before moving it to a new location. This is useful if you want to convert
+a notebook to HTML and share it with students using a public link (e.g., with Dropbox).
+To do so, use the `--nbconvert-to` parameter, as seen below:
+
+![gitautopush nbconvert demo](doc/images/gitautopush_nbconvert.gif)
+
 ## Parameters
 
 Below are parameters you can use to customize the behavior of Gitautopush.
