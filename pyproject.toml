@@ -10,3 +10,5 @@ author-email = "choldgraf@gmail.com"
 home-page = "https://predictablynoisy.com/gitautopush"
 classifiers = ["License :: OSI Approved :: MIT License"]
 
+[tool.flit.scripts]
+gitautopush = "gitautopush.gitautopush:main"
