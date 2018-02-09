@@ -57,3 +57,6 @@ Below are parameters you can use to customize the behavior of Gitautopush.
 
 This tools was first thought up by John Lee, then adapted as a Python module
 by Chris Holdgraf.
+
+Many thanks to the [Flit packaging tool](http://flit.readthedocs.io/en/latest/)
+which is used to build wheels and push to `pip`.
