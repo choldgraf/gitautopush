@@ -38,12 +38,16 @@ The following will happen:
 
 ## Converting with `nbconvert`
 
-In addition, you can tell `gitautopush` to run `nbconvert` on your file
+In addition, you can tell `gitautopush` to run [`nbconvert`](https://nbconvert.readthedocs.io/en/latest/) on your file
 before moving it to a new location. This is useful if you want to convert
 a notebook to HTML and share it with students using a public link (e.g., with Dropbox).
 To do so, use the `--nbconvert-to` parameter, as seen below:
 
 ![gitautopush nbconvert demo](doc/images/gitautopush_nbconvert.gif)
+
+For example, you could say
+
+`gitautopush --nbconvert-to html /path/to/target/notebook.ipynb`
 
 ## Parameters
 
