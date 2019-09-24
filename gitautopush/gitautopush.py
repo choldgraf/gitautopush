@@ -1,4 +1,4 @@
-from subprocess import run, STDOUT
+from subprocess import run, PIPE
 import os
 import os.path as op
 from time import sleep
@@ -38,14 +38,14 @@ def main():
 
     try:
         out = run("git rev-parse --abbrev-ref HEAD".split(), check=True,
-                  capture_output=STDOUT, cwd=path)
+                  stdout=PIPE, cwd=path)
         branch = out.stdout.decode().strip()
 
     except Exception:
         raise ValueError("A `git status` command didn't work, are you sure this is a git repository?")
 
     # Grab the URL of the remote
-    out = run('git remote -v'.split(), capture_output=STDOUT, cwd=path)
+    out = run('git remote -v'.split(), stdout=PIPE, cwd=path)
     remotes = out.stdout.decode().strip().split('\n')
     remote = [ii for ii in remotes if '(push)' in ii][0].strip().split()[1]
     orgrepo = '/'.join(remote.split('/')[-2:])
@@ -62,7 +62,7 @@ def main():
     ii = 1
     while True:
         # Check for any changes in this folder
-        out = run('git status --porcelain'.split(), capture_output=STDOUT, cwd=path)
+        out = run('git status --porcelain'.split(), stdout=PIPE, cwd=path)
         changed_files = out.stdout.decode().strip().split('\n')
         changed_files = [ii.strip().split(' ', 1)[-1] for ii in changed_files]
         changed_files = [ii for ii in changed_files if len(ii) > 0]
@@ -88,9 +88,9 @@ def main():
             github_extra = GITHUB_BASE.format(orgrepo=orgrepo, branch=branch, path=ch_file)
             msg += f'{tab}{ch_file}\n{tab}{tab}{nbviewer_extra}\n{tab}{tab}{github_extra}\n'
 
-        run(["git", "commit", "-m", f"gitautosync update {ii}"], check=True, capture_output=STDOUT, cwd=path)
+        run(["git", "commit", "-m", f"gitautosync update {ii}"], check=True, stdout=PIPE, cwd=path)
 
-        out = run(("git", "push"), capture_output=STDOUT, cwd=path)
+        out = run(("git", "push"), stdout=PIPE, cwd=path)
         print("\n---\n")
         print(f"Update {ii}\n\n{msg}")
         ii += 1
