@@ -16,7 +16,7 @@ DESCRIPTION = (
 parser = argparse.ArgumentParser(description=DESCRIPTION)
 parser.add_argument(
     "path", nargs="?", default='.', help=("The path to the folder you'd like to watch. "
-                                            "Any changes to this folder will be committed and pushed.")
+                                          "Any changes to this folder will be committed and pushed.")
 )
 parser.add_argument(
     "--sleep", default=10, help="Time to wait (in seconds) before checking for updates."
