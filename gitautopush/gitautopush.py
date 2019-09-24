@@ -15,15 +15,15 @@ DESCRIPTION = (
 )
 parser = argparse.ArgumentParser(description=DESCRIPTION)
 parser.add_argument(
-    "--path", default='.', help=("The path to the folder you'd like to watch. "
-                                "Any changes to this folder will be committed and pushed.")
+    "path", nargs="?", default='.', help=("The path to the folder you'd like to watch. "
+                                            "Any changes to this folder will be committed and pushed.")
 )
 parser.add_argument(
     "--sleep", default=10, help="Time to wait (in seconds) before checking for updates."
 )
 
-NBVIEWER_BASE = "https://nbviewer.jupyter.org/github/{orgrepo}/blob/{branch}/{path}?flush_cache=true"
-GITHUB_BASE = "https://github.com/{orgrepo}/blob/{branch}/{path}"
+NBVIEWER_BASE = "https://nbviewer.jupyter.org/github/%s/blob/%s/%s?flush_cache=true"
+GITHUB_BASE = "https://github.com/%s/blob/%s/%s"
 
 
 def main():
@@ -49,13 +49,11 @@ def main():
     remotes = out.stdout.decode().strip().split('\n')
     remote = [ii for ii in remotes if '(push)' in ii][0].strip().split()[1]
     orgrepo = '/'.join(remote.split('/')[-2:])
-    nbviewer_tree_link = NBVIEWER_BASE.format(
-        orgrepo=orgrepo, branch=branch, path=''
-    ).split('?')[0].replace('blob', 'tree')
+    nbviewer_tree_link = (NBVIEWER_BASE % (orgrepo, branch, '')).split('?')[0].replace('blob', 'tree')
 
     print('\n---')
     print("Observing changes to folder: " + op.abspath(path))
-    print(f"Pushing changes to repository: {remote}/tree/{branch}")
+    print("Pushing changes to repository: %s/tree/%s" % (remote, branch))
     print("View notebooks at this nbviewer link: " + nbviewer_tree_link)
 
     # --- Main loop ---
@@ -81,18 +79,18 @@ def main():
         for ch_file in changed_files:
             tab = '    '
             if _is_ipynb(ch_file):
-                nbviewer_extra = NBVIEWER_BASE.format(orgrepo=orgrepo, branch=branch, path=ch_file)
-                nbviewer_extra = f"{nbviewer_extra}"
+                nbviewer_extra = NBVIEWER_BASE % (orgrepo, branch, ch_file)
+                nbviewer_extra = "%s" % nbviewer_extra
             else:
                 nbviewer_extra = ''
-            github_extra = GITHUB_BASE.format(orgrepo=orgrepo, branch=branch, path=ch_file)
-            msg += f'{tab}{ch_file}\n{tab}{tab}{nbviewer_extra}\n{tab}{tab}{github_extra}\n'
+            github_extra = GITHUB_BASE % (orgrepo, branch, ch_file)
+            msg += tab + ch_file + '\n' + tab + tab + nbviewer_extra + '\n' + tab + tab + github_extra + '\n'
 
-        run(["git", "commit", "-m", f"gitautosync update {ii}"], check=True, stdout=PIPE, cwd=path)
+        run(["git", "commit", "-m", "gitautosync update %s" % ii], check=True, stdout=PIPE, cwd=path)
 
         out = run(("git", "push"), stdout=PIPE, cwd=path)
         print("\n---\n")
-        print(f"Update {ii}\n\n{msg}")
+        print("Update %s\n\n%s" % (ii, msg))
         ii += 1
         sleep(this_sleep)
 
