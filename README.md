@@ -41,9 +41,10 @@ them follow along.
 
 Below are parameters you can use to customize the behavior of Gitautopush.
 
+* `path <STRING>` - a path to the folder you'd like to watch and synchronize
 * `--sleep <INT>` - the amount of time (in seconds) to wait in between
   attempts to synchronize.
-* `--path <STRING>` - a path to the folder you'd like to watch and synchronize
+
 
 ## Tutorial via an example use-case
 
@@ -68,7 +69,7 @@ Now, run `gitautopush` and point it to the new folder. We'll
 tell it to sleep for 10 seconds after each check:
 
 ```
-gitautopush --path ./gitautopush-demo --sleep 10
+gitautopush ./gitautopush-demo --sleep 10
 ```
 
 `gitautopush` will print a few useful links, and begin checking the
