@@ -1,13 +1,18 @@
 # gitautopush
-Quickly copy in changes to a file and push code to a git repository used
-for teaching.
 
-Gitautopush is meant to be used as a live synchronization tool for teaching.
-Say you've got a Jupyter notebook that you are populating with code while
-you are teaching a class. Oftentimes students want to see previously-written
-code as a "reference" or as way to reorient themselves. This tool lets you
-automatically synchronize your notebook to a GitHub repo so that students can
-quickly see the latest changes. See the GIF below for an example.
+Watch a local git repository for any changes and automatically push them to GitHub.
+
+Useful as a live synchronization tool for teaching.
+Say you've got a Jupyter notebook (or a markdown file) that you are populating with code while
+you are teaching a class. As you add content to the file, you'd like students
+to have access to the "latest" version at any moment in time.
+
+`gitautopush` lets you automatically track the latest changes to a git repository,
+and automatically push them to GitHub. You
+can then ask students to visit a GitHub or nbviewer link, and they
+will be able to see any changes that you've made.
+
+See the GIF below for an example.
 
 ![gitautopush demo](doc/images/demo.gif)
 
@@ -19,35 +24,18 @@ You can install with pip:
 
 ## Usage
 
-Navigate to the folder that contains the Git repository to which you'll be
-pushing your changes. Now determine the path to a target notebook.
-This is the notebook that you'll be populating during teaching. Run the
-following command to start `gitautopush`:
+First, make sure that you've got a GitHub repository cloned to a local folder.
 
-`gitautopush /path/to/target/notebook.ipynb`
+Next, run `gitautopush` and point it to that folder:
 
-The following will happen:
+```
+gitautopush /path/to/my/repo/folder
+```
 
-1. If the target notebook is not in the current folder, it will be copied to
-   the current folder.
-2. `gitautopush` will look for changes to the target notebook. If it detects
-   changes, it will copy them into the current folder and commit them.
-3. `gitautopush` will then push the state of the git repository to the default
-   remote repository.
-4. This cycle repeats.
-
-## Converting with `nbconvert`
-
-In addition, you can tell `gitautopush` to run [`nbconvert`](https://nbconvert.readthedocs.io/en/latest/) on your file
-before moving it to a new location. This is useful if you want to convert
-a notebook to HTML and share it with students using a public link (e.g., with Dropbox).
-To do so, use the `--nbconvert-to` parameter, as seen below:
-
-![gitautopush nbconvert demo](doc/images/gitautopush_nbconvert.gif)
-
-For example, you could say
-
-`gitautopush --nbconvert-to html /path/to/target/notebook.ipynb`
+`gitautopush` will begin watching this folder for any changes. When it
+finds them, it will commit them and push the folder contents to GitHub.
+It will also display some links that you can share with students to help
+them follow along.
 
 ## Parameters
 
@@ -55,12 +43,48 @@ Below are parameters you can use to customize the behavior of Gitautopush.
 
 * `--sleep <INT>` - the amount of time (in seconds) to wait in between
   attempts to synchronize.
-* `--rename <STRING>` - a new name for the file/folder you are synchronizing.
+* `--path <STRING>` - a path to the folder you'd like to watch and synchronize
+
+## Tutorial via an example use-case
+
+Here's a common use-case for `gitautopush`:
+
+You're teaching a Software Carpentry bootcamp and you'd like to do your work
+in a Jupyter Notebook. You have a "master copy" that you're working from, but you
+don't want to give the whole thing to students ahead of time. Your plan is to
+do your work in an empty notebook as students watch, and you'd like students
+to have access to the latest version of the notebook at all times.
+
+First, you **create an empty GitHub repository** which we'll call `gitautopush-demo`.
+Next, we'll create a folder where we'll be doing our work:
+
+Next, you **clone this empty repository to your computer**:
+
+```
+git clone https://github.com/choldgraf/gitautopush-demo
+```
+
+Now, run `gitautopush` and point it to the new folder. We'll
+tell it to sleep for 10 seconds after each check:
+
+```
+gitautopush --path ./gitautopush-demo --sleep 10
+```
+
+`gitautopush` will print a few useful links, and begin checking the
+folder for any changes. When it finds one, it will commit the change to
+the repository and push the result. It will also print an **nbviewer link**
+for any Jupyter notebook that is changed. You can share these links with
+your students.
+
+Finally, open a new terminal window and use it to launch an application
+(e.g. Jupyter Lab, Jupyter Notbeook, or your own text editor) to edit
+the content.
+
+As changes are made, note the links that are provided and share them
+with your students.
 
 ## Acknowledgements
 
 This tools was first thought up by John Lee, then adapted as a Python module
 by Chris Holdgraf.
-
-Many thanks to the [Flit packaging tool](http://flit.readthedocs.io/en/latest/)
-which is used to build wheels and push to `pip`.
